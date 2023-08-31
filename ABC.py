@@ -129,6 +129,7 @@ plt.show()
 #ani.save('./3D-animation.gif', writer='pillow')
 #plt.close()
 
+#最適値をプロット
 plt.plot(range(G), best_value)
 plt.yscale('log')
 plt.title("Time-varying funktion")
