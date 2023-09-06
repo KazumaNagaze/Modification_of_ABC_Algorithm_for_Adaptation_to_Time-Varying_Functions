@@ -12,9 +12,9 @@ Kd = 1.0
 # PIDパラメータを設定する関数
 def set_pid_parameters():
     global Kp, Ki, Kd
-    Kp = float(Kp_entry.get())
-    Ki = float(Ki_entry.get())
-    Kd = float(Kd_entry.get())
+    Kp = Kp_scale.get()
+    Ki = Ki_scale.get()
+    Kd = Kd_scale.get()
 
 # シミュレーションを実行する関数
 def simulate():
@@ -60,21 +60,21 @@ pid_frame.grid(row=0, column=0, padx=10, pady=10)
 
 Kp_label = ttk.Label(pid_frame, text="Kp:")
 Kp_label.grid(row=0, column=0, padx=5, pady=5)
-Kp_entry = ttk.Entry(pid_frame)
-Kp_entry.grid(row=0, column=1, padx=5, pady=5)
-Kp_entry.insert(0, str(Kp))
+Kp_scale = tk.Scale(pid_frame, from_=0.0, to=10.0, resolution=0.01, orient="horizontal")
+Kp_scale.grid(row=0, column=1, padx=5, pady=5)
+Kp_scale.set(Kp)
 
 Ki_label = ttk.Label(pid_frame, text="Ki:")
 Ki_label.grid(row=1, column=0, padx=5, pady=5)
-Ki_entry = ttk.Entry(pid_frame)
-Ki_entry.grid(row=1, column=1, padx=5, pady=5)
-Ki_entry.insert(0, str(Ki))
+Ki_scale = tk.Scale(pid_frame, from_=0.0, to=10.0, resolution=0.01, orient="horizontal")
+Ki_scale.grid(row=1, column=1, padx=5, pady=5)
+Ki_scale.set(Ki)
 
 Kd_label = ttk.Label(pid_frame, text="Kd:")
 Kd_label.grid(row=2, column=0, padx=5, pady=5)
-Kd_entry = ttk.Entry(pid_frame)
-Kd_entry.grid(row=2, column=1, padx=5, pady=5)
-Kd_entry.insert(0, str(Kd))
+Kd_scale = tk.Scale(pid_frame, from_=0.0, to=10.0, resolution=0.01, orient="horizontal")
+Kd_scale.grid(row=2, column=1, padx=5, pady=5)
+Kd_scale.set(Kd)
 
 update_button = ttk.Button(pid_frame, text="パラメータ更新", command=set_pid_parameters)
 update_button.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
