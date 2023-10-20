@@ -5,7 +5,7 @@ from matplotlib.animation import FuncAnimation
 import math
 
 # 目的関数の設定
-def custom_func(x0, x1, k):
+def custom_func(Kp, Ki, Kd, k):
     result = 1 - np.exp((-((x0 - 250 - 125 * np.sin(Alpha * k))**2) / (2 * 40**2))
              -(((x1 - 250 - 125 * np.cos(Alpha * k))**2) / (2 * 40**2)))
     return result
@@ -83,7 +83,7 @@ for g in range(G):
     for i in range(N):
         w.append(fit(*x[i], g))
     
-    for l in range(N):
+    for i in range(N):
         i = roulette_choice(w)
         j = np.random.randint(d)
         r = np.random.rand()*2 - 1 # -1から1までの一様乱数

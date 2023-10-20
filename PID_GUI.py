@@ -13,10 +13,10 @@ Kd = 1.0
 # シミュレーション用時間設定
 time = np.linspace(0, 10, 1000)
 
-# 制御対象のシステムモデル（二次遅れ系）
-omega_n = 2.0  # 自然角周波数
-zeta = 1.5     # 減衰比（1より大きい）
-system = ctrl.TransferFunction([omega_n**2], [1, 2*zeta*omega_n, omega_n**2])
+# 制御対象の伝達関数を定義 (例: 2次遅れ系)
+num = [2]
+den = [1, 0.6, 1]
+system = ctrl.TransferFunction(num, den)
 
 # グラフデータの初期化
 input_signal = np.ones_like(time)
@@ -32,11 +32,16 @@ def parameter_changed(event):
     Kd = Kd_scale.get()
 
     # 制御器を再構築
-    controller = ctrl.TransferFunction([Kd, Ki, Kp], [1, 0])
-    closed_loop_system = ctrl.feedback(controller * system, 1)
+    controller = ctrl.TransferFunction([Kd, Kp, Ki], [1, 0])
+    closed_loop_system = ctrl.feedback(controller * system, 1, -1)
+
+    #パワー
+    feedback_connection = ctrl.TransferFunction([2*Kd, 2*Kp, 2*Ki], [1, 2*Kd+0.6, 2*Kp+1, 2*Ki])
+
+    systems = ctrl.TransferFunction([2*Kp], [1, 0.6, 1+2*Kp])
 
     # 制御系の応答を計算
-    _, response = ctrl.step_response(closed_loop_system, time)
+    _, response = ctrl.step_response(feedback_connection, time)
 
     # グラフを更新
     update_graph()
@@ -62,21 +67,21 @@ pid_frame.grid(row=0, column=0, padx=10, pady=10)
 
 Kp_label = ttk.Label(pid_frame, text="Kp:")
 Kp_label.grid(row=0, column=0, padx=5, pady=5)
-Kp_scale = tk.Scale(pid_frame, from_=0.0, to=10.0, resolution=0.01, orient="horizontal")
+Kp_scale = tk.Scale(pid_frame, from_=0.0, to=20.0, resolution=0.1, orient="horizontal")
 Kp_scale.grid(row=0, column=1, padx=5, pady=5)
 Kp_scale.set(Kp)
 Kp_scale.bind("<Motion>", parameter_changed)  # スライダーが動くたびにパラメータを更新
 
 Ki_label = ttk.Label(pid_frame, text="Ki:")
 Ki_label.grid(row=1, column=0, padx=5, pady=5)
-Ki_scale = tk.Scale(pid_frame, from_=0.0, to=10.0, resolution=0.01, orient="horizontal")
+Ki_scale = tk.Scale(pid_frame, from_=0.0, to=20.0, resolution=0.1, orient="horizontal")
 Ki_scale.grid(row=1, column=1, padx=5, pady=5)
 Ki_scale.set(Ki)
 Ki_scale.bind("<Motion>", parameter_changed)  # スライダーが動くたびにパラメータを更新
 
 Kd_label = ttk.Label(pid_frame, text="Kd:")
 Kd_label.grid(row=2, column=0, padx=5, pady=5)
-Kd_scale = tk.Scale(pid_frame, from_=0.0, to=10.0, resolution=0.01, orient="horizontal")
+Kd_scale = tk.Scale(pid_frame, from_=0.0, to=20.0, resolution=0.1, orient="horizontal")
 Kd_scale.grid(row=2, column=1, padx=5, pady=5)
 Kd_scale.set(Kd)
 Kd_scale.bind("<Motion>", parameter_changed)  # スライダーが動くたびにパラメータを更新
